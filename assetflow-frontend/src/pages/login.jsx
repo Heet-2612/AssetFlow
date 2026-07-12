@@ -1,17 +1,41 @@
 import { useState } from "react";
+import axios from "axios";
 
 function Login(){
 
 const [email,setEmail]=useState("");
 const [password,setPassword]=useState("");
+const [message,setMessage]=useState("");
 
-const handleLogin=(e)=>{
+const handleLogin=async(e)=>{
     e.preventDefault();
 
-    console.log({
-        email,
-        password
-    });
+    try {
+
+        const response = await axios.post(
+            "http://localhost:8080/api/auth/login",
+            {
+                email,
+                password
+            }
+        );
+
+        console.log(response.data);
+
+        setMessage("Login Successful");
+
+        localStorage.setItem(
+            "token",
+            response.data.token
+        );
+
+    } catch(error){
+
+        console.log(error);
+
+        setMessage("Login Failed");
+
+    }
 }
 
 
@@ -56,6 +80,11 @@ Login
 
 
 </form>
+
+<p className="mt-3 text-center">
+{message}
+</p>
+
 
 </div>
 
